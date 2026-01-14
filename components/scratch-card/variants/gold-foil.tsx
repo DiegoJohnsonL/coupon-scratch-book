@@ -137,7 +137,7 @@ export function GoldFoilScratch({
     };
 
     initCanvas();
-  }, [canvasRef]);
+  }, [canvasRef, isLocked]);
 
   const getPeelTransform = useCallback(() => {
     const angle = peelProgress * 180;

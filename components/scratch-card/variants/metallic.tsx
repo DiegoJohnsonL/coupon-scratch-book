@@ -124,7 +124,7 @@ export function MetallicScratch({
     };
 
     initCanvas();
-  }, [canvasRef]);
+  }, [canvasRef, isLocked]);
 
   // Initialize particle canvas
   useEffect(() => {

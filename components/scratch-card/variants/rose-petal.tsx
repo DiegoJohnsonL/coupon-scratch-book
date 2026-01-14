@@ -116,7 +116,7 @@ export function RosePetalScratch({
     };
 
     initCanvas();
-  }, [canvasRef]);
+  }, [canvasRef, isLocked]);
 
   // Track scratching for petals
   useEffect(() => {

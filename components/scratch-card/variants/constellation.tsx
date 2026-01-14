@@ -107,7 +107,7 @@ export function ConstellationScratch({
     };
 
     initCanvas();
-  }, [canvasRef]);
+  }, [canvasRef, isLocked]);
 
   // Track scratching for shooting stars and star reveals
   useEffect(() => {

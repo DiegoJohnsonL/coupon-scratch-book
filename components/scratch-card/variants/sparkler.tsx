@@ -115,7 +115,7 @@ export function SparklerScratch({
     };
 
     initCanvas();
-  }, [canvasRef]);
+  }, [canvasRef, isLocked]);
 
   // Track scratching for sparkler trail
   useEffect(() => {
