@@ -1,0 +1,76 @@
+{
+  "coupons": [
+    {
+      "id": "1",
+      "title": "Movie Night",
+      "description": "You pick the movie, I'll make the popcorn",
+      "emoji": "🎬"
+    },
+    {
+      "id": "2",
+      "title": "Breakfast in Bed",
+      "description": "Wake up to your favorite breakfast served with love",
+      "emoji": "🥞"
+    },
+    {
+      "id": "3",
+      "title": "Massage Session",
+      "description": "30 minutes of relaxation, no complaints",
+      "emoji": "💆"
+    },
+    {
+      "id": "4",
+      "title": "Date Night",
+      "description": "I plan everything - surprise destination",
+      "emoji": "💑"
+    },
+    {
+      "id": "5",
+      "title": "Dinner Chef",
+      "description": "I'll cook your favorite meal from scratch",
+      "emoji": "👨‍🍳"
+    },
+    {
+      "id": "6",
+      "title": "Day Off Chores",
+      "description": "Take the day off, I'll handle all the chores",
+      "emoji": "🧹"
+    },
+    {
+      "id": "7",
+      "title": "Road Trip",
+      "description": "Adventure awaits - you pick the destination",
+      "emoji": "🚗"
+    },
+    {
+      "id": "8",
+      "title": "Spa Day",
+      "description": "Full pampering session at home or out",
+      "emoji": "🛁"
+    },
+    {
+      "id": "9",
+      "title": "Stargazing Night",
+      "description": "Blankets, snacks, and counting stars together",
+      "emoji": "🌟"
+    },
+    {
+      "id": "10",
+      "title": "Dance Party",
+      "description": "Living room dance party to our favorite songs",
+      "emoji": "💃"
+    },
+    {
+      "id": "11",
+      "title": "Love Letter",
+      "description": "A handwritten letter about why I love you",
+      "emoji": "💌"
+    },
+    {
+      "id": "12",
+      "title": "Picnic Date",
+      "description": "Surprise picnic at a beautiful spot",
+      "emoji": "🧺"
+    }
+  ]
+}
