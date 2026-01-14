@@ -32,7 +32,7 @@ export function MetallicScratch({
   const containerRef = useRef<HTMLDivElement>(null);
   const particleCanvasRef = useRef<HTMLCanvasElement>(null);
   const particles = useRef<Particle[]>([]);
-  const animationFrame = useRef<number>();
+  const animationFrame = useRef<number | undefined>(undefined);
   const lastScratchPos = useRef<{ x: number; y: number } | null>(null);
 
   const { canvasRef, isComplete, progress } = useScratch({

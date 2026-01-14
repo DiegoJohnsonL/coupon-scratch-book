@@ -39,7 +39,7 @@ export function SparklerScratch({
   const trailRef = useRef<TrailPoint[]>([]);
   const sparksRef = useRef<Spark[]>([]);
   const lastScratchPos = useRef<{ x: number; y: number } | null>(null);
-  const animationFrame = useRef<number>();
+  const animationFrame = useRef<number | undefined>(undefined);
 
   const { canvasRef, isComplete, progress } = useScratch({
     threshold: 0.5,
