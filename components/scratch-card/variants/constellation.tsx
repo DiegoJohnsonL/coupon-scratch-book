@@ -6,6 +6,10 @@ import { useScratch } from "@/hooks/use-scratch";
 
 interface ConstellationScratchProps {
   coupon: Coupon;
+  isLocked?: boolean;
+  unlockDate?: Date | null;
+  isScratched?: boolean;
+  onScratchComplete?: () => void;
 }
 
 interface Star {
@@ -25,7 +29,13 @@ interface ShootingStar {
   opacity: number;
 }
 
-export function ConstellationScratch({ coupon }: ConstellationScratchProps) {
+export function ConstellationScratch({
+  coupon,
+  isLocked = false,
+  unlockDate = null,
+  isScratched = false,
+  onScratchComplete,
+}: ConstellationScratchProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const starsRef = useRef<Star[]>([]);
   const [revealedStars, setRevealedStars] = useState<Set<number>>(new Set());
@@ -36,11 +46,15 @@ export function ConstellationScratch({ coupon }: ConstellationScratchProps) {
   const { canvasRef, isComplete, progress } = useScratch({
     threshold: 0.5,
     brushSize: 40,
+    disabled: isLocked || isScratched,
     onComplete: () => {
       // Reveal all stars on complete
       setRevealedStars(new Set(starsRef.current.map((_, i) => i)));
+      onScratchComplete?.();
     },
   });
+
+  const showComplete = isComplete || isScratched;
 
   // Initialize stars and scratch canvas
   useEffect(() => {
@@ -90,10 +104,6 @@ export function ConstellationScratch({ coupon }: ConstellationScratchProps) {
         ctx.fill();
       }
 
-      ctx.fillStyle = "rgba(255,255,255,0.4)";
-      ctx.font = "bold 14px sans-serif";
-      ctx.textAlign = "center";
-      ctx.fillText("SCRATCH THE STARS", canvas.width / 2, canvas.height / 2);
     };
 
     initCanvas();
@@ -196,13 +206,13 @@ export function ConstellationScratch({ coupon }: ConstellationScratchProps) {
   }, [revealedStars]);
 
   return (
-    <ScratchCard coupon={coupon} variant="Constellation" isComplete={isComplete}>
+    <ScratchCard coupon={coupon} variant="Constellation" isComplete={showComplete} isLocked={isLocked} unlockDate={unlockDate}>
       <div ref={containerRef} className="absolute inset-0">
         <canvas
           ref={canvasRef}
           className="absolute inset-0 touch-none cursor-pointer"
           style={{
-            opacity: isComplete ? 0 : 1,
+            opacity: showComplete ? 0 : 1,
             transition: "opacity 0.5s ease-out",
           }}
         />

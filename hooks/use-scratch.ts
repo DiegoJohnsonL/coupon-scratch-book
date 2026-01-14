@@ -5,6 +5,7 @@ import { useRef, useCallback, useState, useEffect } from "react";
 interface UseScratchOptions {
   threshold?: number; // % scratched to trigger complete (0-1)
   brushSize?: number;
+  disabled?: boolean;
   onProgress?: (percent: number) => void;
   onComplete?: () => void;
 }
@@ -17,7 +18,7 @@ interface UseScratchReturn {
 }
 
 export function useScratch(options: UseScratchOptions = {}): UseScratchReturn {
-  const { threshold = 0.5, brushSize = 40, onProgress, onComplete } = options;
+  const { threshold = 0.5, brushSize = 40, disabled = false, onProgress, onComplete } = options;
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isDrawing = useRef(false);
@@ -90,22 +91,22 @@ export function useScratch(options: UseScratchOptions = {}): UseScratchReturn {
 
   const handlePointerDown = useCallback(
     (e: PointerEvent) => {
-      if (isComplete) return;
+      if (isComplete || disabled) return;
       isDrawing.current = true;
       const pos = getPointerPosition(e);
       scratch(pos.x, pos.y);
       (e.target as HTMLElement)?.setPointerCapture?.(e.pointerId);
     },
-    [getPointerPosition, scratch, isComplete]
+    [getPointerPosition, scratch, isComplete, disabled]
   );
 
   const handlePointerMove = useCallback(
     (e: PointerEvent) => {
-      if (!isDrawing.current || isComplete) return;
+      if (!isDrawing.current || isComplete || disabled) return;
       const pos = getPointerPosition(e);
       scratch(pos.x, pos.y);
     },
-    [getPointerPosition, scratch, isComplete]
+    [getPointerPosition, scratch, isComplete, disabled]
   );
 
   const handlePointerUp = useCallback(() => {

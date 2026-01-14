@@ -6,6 +6,10 @@ import { useScratch } from "@/hooks/use-scratch";
 
 interface SparklerScratchProps {
   coupon: Coupon;
+  isLocked?: boolean;
+  unlockDate?: Date | null;
+  isScratched?: boolean;
+  onScratchComplete?: () => void;
 }
 
 interface TrailPoint {
@@ -23,7 +27,13 @@ interface Spark {
   maxLife: number;
 }
 
-export function SparklerScratch({ coupon }: SparklerScratchProps) {
+export function SparklerScratch({
+  coupon,
+  isLocked = false,
+  unlockDate = null,
+  isScratched = false,
+  onScratchComplete,
+}: SparklerScratchProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const trailCanvasRef = useRef<HTMLCanvasElement>(null);
   const trailRef = useRef<TrailPoint[]>([]);
@@ -34,6 +44,7 @@ export function SparklerScratch({ coupon }: SparklerScratchProps) {
   const { canvasRef, isComplete, progress } = useScratch({
     threshold: 0.5,
     brushSize: 30,
+    disabled: isLocked || isScratched,
     onComplete: () => {
       // Final firework burst
       const canvas = canvasRef.current;
@@ -51,8 +62,11 @@ export function SparklerScratch({ coupon }: SparklerScratchProps) {
           });
         }
       }
+      onScratchComplete?.();
     },
   });
+
+  const showComplete = isComplete || isScratched;
 
   // Initialize canvases
   useEffect(() => {
@@ -98,10 +112,6 @@ export function SparklerScratch({ coupon }: SparklerScratchProps) {
         ctx.fill();
       }
 
-      ctx.fillStyle = "rgba(255,255,255,0.3)";
-      ctx.font = "bold 14px sans-serif";
-      ctx.textAlign = "center";
-      ctx.fillText("DRAW WITH LIGHT", canvas.width / 2, canvas.height / 2);
     };
 
     initCanvas();
@@ -247,13 +257,13 @@ export function SparklerScratch({ coupon }: SparklerScratchProps) {
   }, []);
 
   return (
-    <ScratchCard coupon={coupon} variant="Sparkler" isComplete={isComplete}>
+    <ScratchCard coupon={coupon} variant="Sparkler" isComplete={showComplete} isLocked={isLocked} unlockDate={unlockDate}>
       <div ref={containerRef} className="absolute inset-0">
         <canvas
           ref={canvasRef}
           className="absolute inset-0 touch-none cursor-crosshair"
           style={{
-            opacity: isComplete ? 0 : 1,
+            opacity: showComplete ? 0 : 1,
             transition: "opacity 0.5s ease-out",
           }}
         />
@@ -263,7 +273,7 @@ export function SparklerScratch({ coupon }: SparklerScratchProps) {
         />
 
         {/* Firework celebration on complete */}
-        {isComplete && (
+        {showComplete && (
           <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
             <div className="text-6xl animate-bounce">✨</div>
           </div>

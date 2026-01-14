@@ -6,6 +6,10 @@ import { useScratch } from "@/hooks/use-scratch";
 
 interface RosePetalScratchProps {
   coupon: Coupon;
+  isLocked?: boolean;
+  unlockDate?: Date | null;
+  isScratched?: boolean;
+  onScratchComplete?: () => void;
 }
 
 interface Petal {
@@ -20,7 +24,13 @@ interface Petal {
   vr: number;
 }
 
-export function RosePetalScratch({ coupon }: RosePetalScratchProps) {
+export function RosePetalScratch({
+  coupon,
+  isLocked = false,
+  unlockDate = null,
+  isScratched = false,
+  onScratchComplete,
+}: RosePetalScratchProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [petals, setPetals] = useState<Petal[]>([]);
   const petalIdRef = useRef(0);
@@ -29,6 +39,7 @@ export function RosePetalScratch({ coupon }: RosePetalScratchProps) {
   const { canvasRef, isComplete, progress } = useScratch({
     threshold: 0.5,
     brushSize: 50,
+    disabled: isLocked || isScratched,
     onComplete: () => {
       // Burst of petals on complete
       const canvas = canvasRef.current;
@@ -43,8 +54,11 @@ export function RosePetalScratch({ coupon }: RosePetalScratchProps) {
         }
         setPetals((prev) => [...prev, ...newPetals]);
       }
+      onScratchComplete?.();
     },
   });
+
+  const showComplete = isComplete || isScratched;
 
   const createPetal = useCallback((x: number, y: number, burst = false): Petal => {
     const angle = Math.random() * Math.PI * 2;
@@ -81,17 +95,17 @@ export function RosePetalScratch({ coupon }: RosePetalScratchProps) {
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
-      // Rose gold gradient background
+      // Deep rose/magenta gradient background
       const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-      gradient.addColorStop(0, "#F5C6CB");
-      gradient.addColorStop(0.5, "#FADBD8");
-      gradient.addColorStop(1, "#F5B7B1");
+      gradient.addColorStop(0, "#3d2645");
+      gradient.addColorStop(0.5, "#5c3d5e");
+      gradient.addColorStop(1, "#4a3050");
 
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       // Add heart pattern watermark
-      ctx.fillStyle = "rgba(255,255,255,0.3)";
+      ctx.fillStyle = "rgba(244,167,185,0.15)";
       ctx.font = "20px sans-serif";
       for (let x = 20; x < canvas.width; x += 50) {
         for (let y = 30; y < canvas.height; y += 50) {
@@ -99,11 +113,6 @@ export function RosePetalScratch({ coupon }: RosePetalScratchProps) {
         }
       }
 
-      // Add "SCRATCH HERE" text
-      ctx.fillStyle = "rgba(255,255,255,0.6)";
-      ctx.font = "bold 16px sans-serif";
-      ctx.textAlign = "center";
-      ctx.fillText("SCRATCH HERE", canvas.width / 2, canvas.height / 2);
     };
 
     initCanvas();
@@ -169,13 +178,13 @@ export function RosePetalScratch({ coupon }: RosePetalScratchProps) {
   }, []);
 
   return (
-    <ScratchCard coupon={coupon} variant="Rose Petal" isComplete={isComplete}>
+    <ScratchCard coupon={coupon} variant="Rose Petal" isComplete={showComplete} isLocked={isLocked} unlockDate={unlockDate}>
       <div ref={containerRef} className="absolute inset-0">
         <canvas
           ref={canvasRef}
           className="absolute inset-0 touch-none cursor-pointer"
           style={{
-            opacity: isComplete ? 0 : 1,
+            opacity: showComplete ? 0 : 1,
             transition: "opacity 0.5s ease-out",
           }}
         />

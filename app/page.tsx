@@ -1,20 +1,6 @@
 import couponsData from "@/data/coupons.json";
-import {
-  MetallicScratch,
-  RosePetalScratch,
-  ConstellationScratch,
-  GoldFoilScratch,
-  SparklerScratch,
-} from "@/components/scratch-card/variants";
+import { LockableScratchCard } from "@/components/scratch-card/lockable-scratch-card";
 import { BookReveal } from "@/components/book-reveal";
-
-const variants = [
-  { Component: MetallicScratch },
-  { Component: RosePetalScratch },
-  { Component: ConstellationScratch },
-  { Component: GoldFoilScratch },
-  { Component: SparklerScratch },
-];
 
 export default function Home() {
   const coupons = couponsData.coupons;
@@ -44,22 +30,14 @@ export default function Home() {
 
       <main className="container mx-auto px-4 pb-16 relative z-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center max-w-5xl mx-auto">
-          {coupons.map((coupon, index) => {
-            const { Component } = variants[index % variants.length];
-            return (
-              <div key={coupon.id} className="w-[280px] h-[380px]">
-                <Component coupon={coupon} />
-              </div>
-            );
-          })}
+          {coupons.map((coupon, index) => (
+            <div key={coupon.id} className="w-[280px] h-[380px]">
+              <LockableScratchCard coupon={coupon} variantIndex={index} />
+            </div>
+          ))}
         </div>
       </main>
 
-      <footer className="py-8 text-center relative z-10">
-        <p className="text-white/40 text-sm">
-          Made with 💕 for our anniversary
-        </p>
-      </footer>
     </BookReveal>
   );
 }

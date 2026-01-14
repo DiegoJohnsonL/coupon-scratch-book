@@ -48,6 +48,8 @@ const defaultOnboarding = [
   },
 ];
 
+const ONBOARDING_COMPLETE_KEY = "anniversary-onboarding-complete";
+
 export function BookReveal({
   children,
   onboardingTexts = defaultOnboarding,
@@ -55,13 +57,23 @@ export function BookReveal({
   const [currentStep, setCurrentStep] = useState(0);
   const [isBookOpening, setIsBookOpening] = useState(false);
   const [showContent, setShowContent] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   const isOnboarding = currentStep < onboardingTexts.length;
   const isLastStep = currentStep === onboardingTexts.length - 1;
 
+  // Check localStorage on mount to skip onboarding if already completed
+  useEffect(() => {
+    const hasCompletedOnboarding = localStorage.getItem(ONBOARDING_COMPLETE_KEY);
+    if (hasCompletedOnboarding === "true") {
+      setShowContent(true);
+    }
+    setIsHydrated(true);
+  }, []);
+
   // Lock body scroll during onboarding
   useEffect(() => {
-    if (!showContent) {
+    if (!showContent && isHydrated) {
       document.body.style.overflow = "hidden";
       document.body.style.position = "fixed";
       document.body.style.width = "100%";
@@ -79,7 +91,7 @@ export function BookReveal({
       document.body.style.width = "";
       document.body.style.height = "";
     };
-  }, [showContent]);
+  }, [showContent, isHydrated]);
 
   const handleClick = () => {
     if (isLastStep) {
@@ -87,9 +99,10 @@ export function BookReveal({
       setIsBookOpening(true);
       setCurrentStep(currentStep + 1);
 
-      // Show content after book opens
+      // Show content after book opens and save to localStorage
       setTimeout(() => {
         setShowContent(true);
+        localStorage.setItem(ONBOARDING_COMPLETE_KEY, "true");
       }, 1800);
     } else if (isOnboarding) {
       setCurrentStep(currentStep + 1);
@@ -122,7 +135,7 @@ export function BookReveal({
         </div>
       )}
       <AnimatePresence>
-        {!showContent && (
+        {isHydrated && !showContent && (
           <motion.div
             className="fixed inset-0 z-50 flex items-center justify-center cursor-pointer touch-none"
             onClick={handleClick}
@@ -282,7 +295,10 @@ export function BookReveal({
       {/* Main content */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: showContent ? 1 : 0, y: showContent ? 0 : 20 }}
+        animate={{
+          opacity: isHydrated && showContent ? 1 : 0,
+          y: isHydrated && showContent ? 0 : 20
+        }}
         transition={{ duration: 0.6, delay: 0.2 }}
       >
         {children}

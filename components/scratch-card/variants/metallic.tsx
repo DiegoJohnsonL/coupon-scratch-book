@@ -6,6 +6,10 @@ import { useScratch } from "@/hooks/use-scratch";
 
 interface MetallicScratchProps {
   coupon: Coupon;
+  isLocked?: boolean;
+  unlockDate?: Date | null;
+  isScratched?: boolean;
+  onScratchComplete?: () => void;
 }
 
 interface Particle {
@@ -18,7 +22,13 @@ interface Particle {
   color: string;
 }
 
-export function MetallicScratch({ coupon }: MetallicScratchProps) {
+export function MetallicScratch({
+  coupon,
+  isLocked = false,
+  unlockDate = null,
+  isScratched = false,
+  onScratchComplete,
+}: MetallicScratchProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const particleCanvasRef = useRef<HTMLCanvasElement>(null);
   const particles = useRef<Particle[]>([]);
@@ -28,6 +38,7 @@ export function MetallicScratch({ coupon }: MetallicScratchProps) {
   const { canvasRef, isComplete, progress } = useScratch({
     threshold: 0.5,
     brushSize: 45,
+    disabled: isLocked || isScratched,
     onComplete: () => {
       // Burst of particles on complete
       for (let i = 0; i < 50; i++) {
@@ -40,13 +51,16 @@ export function MetallicScratch({ coupon }: MetallicScratchProps) {
           ));
         }
       }
+      onScratchComplete?.();
     },
   });
+
+  const showComplete = isComplete || isScratched;
 
   const createParticle = useCallback((x: number, y: number, burst = false): Particle => {
     const angle = Math.random() * Math.PI * 2;
     const speed = burst ? Math.random() * 8 + 4 : Math.random() * 3 + 1;
-    const colors = ["#C0C0C0", "#D4AF37", "#FFD700", "#E8E8E8", "#B8860B"];
+    const colors = ["#8b7ba8", "#a8a4ce", "#f4a7b9", "#ffffff", "#6b5b7a"];
     return {
       x,
       y,
@@ -83,13 +97,13 @@ export function MetallicScratch({ coupon }: MetallicScratchProps) {
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
-      // Create metallic gradient
+      // Create metallic gradient - deep blue/purple theme
       const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-      gradient.addColorStop(0, "#C0C0C0");
-      gradient.addColorStop(0.3, "#E8E8E8");
-      gradient.addColorStop(0.5, "#D4AF37");
-      gradient.addColorStop(0.7, "#E8E8E8");
-      gradient.addColorStop(1, "#C0C0C0");
+      gradient.addColorStop(0, "#2d3a5c");
+      gradient.addColorStop(0.3, "#4a5580");
+      gradient.addColorStop(0.5, "#6b5b7a");
+      gradient.addColorStop(0.7, "#4a5580");
+      gradient.addColorStop(1, "#2d3a5c");
 
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -107,11 +121,6 @@ export function MetallicScratch({ coupon }: MetallicScratchProps) {
         ctx.putImageData(imageData, 0, 0);
       }
 
-      // Add "SCRATCH HERE" text
-      ctx.fillStyle = "rgba(0,0,0,0.2)";
-      ctx.font = "bold 16px sans-serif";
-      ctx.textAlign = "center";
-      ctx.fillText("SCRATCH HERE", canvas.width / 2, canvas.height / 2);
     };
 
     initCanvas();
@@ -208,13 +217,13 @@ export function MetallicScratch({ coupon }: MetallicScratchProps) {
   }, []);
 
   return (
-    <ScratchCard coupon={coupon} variant="Metallic" isComplete={isComplete}>
+    <ScratchCard coupon={coupon} variant="Metallic" isComplete={showComplete} isLocked={isLocked} unlockDate={unlockDate}>
       <div ref={containerRef} className="absolute inset-0">
         <canvas
           ref={canvasRef}
           className="absolute inset-0 touch-none cursor-pointer"
           style={{
-            opacity: isComplete ? 0 : 1,
+            opacity: showComplete ? 0 : 1,
             transition: "opacity 0.5s ease-out",
           }}
         />

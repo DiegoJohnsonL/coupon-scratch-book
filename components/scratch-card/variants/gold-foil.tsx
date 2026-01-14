@@ -6,9 +6,19 @@ import { useScratch } from "@/hooks/use-scratch";
 
 interface GoldFoilScratchProps {
   coupon: Coupon;
+  isLocked?: boolean;
+  unlockDate?: Date | null;
+  isScratched?: boolean;
+  onScratchComplete?: () => void;
 }
 
-export function GoldFoilScratch({ coupon }: GoldFoilScratchProps) {
+export function GoldFoilScratch({
+  coupon,
+  isLocked = false,
+  unlockDate = null,
+  isScratched = false,
+  onScratchComplete,
+}: GoldFoilScratchProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [peelProgress, setPeelProgress] = useState(0);
   const [peelCorner, setPeelCorner] = useState<"tl" | "tr" | "bl" | "br">("br");
@@ -18,10 +28,16 @@ export function GoldFoilScratch({ coupon }: GoldFoilScratchProps) {
   const { canvasRef, isComplete, progress } = useScratch({
     threshold: 0.4,
     brushSize: 50,
+    disabled: isLocked || isScratched,
     onProgress: (p) => {
       setPeelProgress(Math.min(p * 2, 1));
     },
+    onComplete: () => {
+      onScratchComplete?.();
+    },
   });
+
+  const showComplete = isComplete || isScratched;
 
   // Determine peel corner based on first scratch position
   useEffect(() => {
@@ -83,14 +99,14 @@ export function GoldFoilScratch({ coupon }: GoldFoilScratchProps) {
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
-      // Gold foil gradient
+      // Deep purple/rose foil gradient
       const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-      gradient.addColorStop(0, "#FFD700");
-      gradient.addColorStop(0.2, "#FFC125");
-      gradient.addColorStop(0.4, "#FFB90F");
-      gradient.addColorStop(0.6, "#FFEC8B");
-      gradient.addColorStop(0.8, "#FFC125");
-      gradient.addColorStop(1, "#FFD700");
+      gradient.addColorStop(0, "#4a3660");
+      gradient.addColorStop(0.2, "#6b4d7a");
+      gradient.addColorStop(0.4, "#8b6a8f");
+      gradient.addColorStop(0.6, "#a87c9e");
+      gradient.addColorStop(0.8, "#6b4d7a");
+      gradient.addColorStop(1, "#4a3660");
 
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -118,11 +134,6 @@ export function GoldFoilScratch({ coupon }: GoldFoilScratchProps) {
         ctx.putImageData(imageData, 0, 0);
       }
 
-      // Text
-      ctx.fillStyle = "rgba(139,69,19,0.4)";
-      ctx.font = "bold 14px serif";
-      ctx.textAlign = "center";
-      ctx.fillText("PEEL TO REVEAL", canvas.width / 2, canvas.height / 2);
     };
 
     initCanvas();
@@ -170,7 +181,7 @@ export function GoldFoilScratch({ coupon }: GoldFoilScratchProps) {
   )`;
 
   return (
-    <ScratchCard coupon={coupon} variant="Gold Foil" isComplete={isComplete}>
+    <ScratchCard coupon={coupon} variant="Gold Foil" isComplete={showComplete} isLocked={isLocked} unlockDate={unlockDate}>
       <div ref={containerRef} className="absolute inset-0" style={{ perspective: "1000px" }}>
         {/* Foil layer with peel effect */}
         <div
@@ -178,8 +189,8 @@ export function GoldFoilScratch({ coupon }: GoldFoilScratchProps) {
           style={{
             transformStyle: "preserve-3d",
             transformOrigin: getPeelTransform().origin,
-            transform: isComplete ? "scale(0)" : getPeelTransform().transform,
-            transition: isComplete ? "transform 0.5s ease-out" : "none",
+            transform: showComplete ? "scale(0)" : getPeelTransform().transform,
+            transition: showComplete ? "transform 0.5s ease-out" : "none",
           }}
         >
           <canvas
@@ -226,7 +237,7 @@ export function GoldFoilScratch({ coupon }: GoldFoilScratchProps) {
           className="absolute inset-0 -z-10"
           style={{
             background: "linear-gradient(135deg, #722F37 0%, #4A0E0E 100%)",
-            opacity: isComplete ? 1 : peelProgress,
+            opacity: showComplete ? 1 : peelProgress,
           }}
         />
       </div>

@@ -2,75 +2,59 @@
   "coupons": [
     {
       "id": "1",
-      "title": "Movie Night",
-      "description": "You pick the movie, I'll make the popcorn",
-      "emoji": "🎬"
+      "title": "Bouquet of Flowers",
+      "description": "A beautiful bouquet picked just for you",
+      "emoji": "💐",
+      "unlockTime": "2026-01-14T09:30:00-05:00"
     },
     {
       "id": "2",
-      "title": "Breakfast in Bed",
-      "description": "Wake up to your favorite breakfast served with love",
-      "emoji": "🥞"
+      "title": "Chocolates & Movie Night",
+      "description": "Your favorite chocolates for our cozy movie night together",
+      "emoji": "🍫",
+      "unlockTime": "2026-01-14T09:35:00-05:00"
     },
     {
       "id": "3",
-      "title": "Massage Session",
-      "description": "30 minutes of relaxation, no complaints",
-      "emoji": "💆"
+      "title": "Our Love App",
+      "description": "A mobile app I made for us - to store memories, notes, and grow together",
+      "emoji": "📱",
+      "unlockTime": "2026-01-14T13:30:00-05:00"
     },
     {
       "id": "4",
-      "title": "Date Night",
-      "description": "I plan everything - surprise destination",
-      "emoji": "💑"
+      "title": "Breakfast in Bed",
+      "description": "Wake up to your favorite breakfast served with love",
+      "emoji": "🥞",
+      "unlockTime": "2026-01-15T00:00:00-05:00"
     },
     {
       "id": "5",
-      "title": "Dinner Chef",
-      "description": "I'll cook your favorite meal from scratch",
-      "emoji": "👨‍🍳"
+      "title": "Movie Marathon",
+      "description": "You pick the movies, I'll bring all the snacks",
+      "emoji": "🎬",
+      "unlockTime": "2026-01-16T00:00:00-05:00"
     },
     {
       "id": "6",
-      "title": "Day Off Chores",
-      "description": "Take the day off, I'll handle all the chores",
-      "emoji": "🧹"
+      "title": "Massage Session",
+      "description": "A relaxing full body massage, anytime you want",
+      "emoji": "💆",
+      "unlockTime": "2026-01-17T00:00:00-05:00"
     },
     {
       "id": "7",
-      "title": "Road Trip",
-      "description": "Adventure awaits - you pick the destination",
-      "emoji": "🚗"
+      "title": "Adventure Day",
+      "description": "A surprise outing planned just for you",
+      "emoji": "🎒",
+      "unlockTime": "2026-01-18T00:00:00-05:00"
     },
     {
       "id": "8",
-      "title": "Spa Day",
-      "description": "Full pampering session at home or out",
-      "emoji": "🛁"
-    },
-    {
-      "id": "9",
-      "title": "Stargazing Night",
-      "description": "Blankets, snacks, and counting stars together",
-      "emoji": "🌟"
-    },
-    {
-      "id": "10",
-      "title": "Dance Party",
-      "description": "Living room dance party to our favorite songs",
-      "emoji": "💃"
-    },
-    {
-      "id": "11",
-      "title": "Love Letter",
-      "description": "A handwritten letter about why I love you",
-      "emoji": "💌"
-    },
-    {
-      "id": "12",
-      "title": "Picnic Date",
-      "description": "Surprise picnic at a beautiful spot",
-      "emoji": "🧺"
+      "title": "Chore Free Day",
+      "description": "Take the day off - I'll handle everything",
+      "emoji": "🛋️",
+      "unlockTime": "2026-01-19T00:00:00-05:00"
     }
   ]
 }
